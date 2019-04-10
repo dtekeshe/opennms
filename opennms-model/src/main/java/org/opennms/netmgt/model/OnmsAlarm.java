@@ -727,7 +727,11 @@ public class OnmsAlarm implements Acknowledgeable, Serializable {
     @Transient
     @XmlTransient
     public boolean isAcknowledged() {
-        return getAlarmAckUser() != null;
+        return getAlarmAckTime() != null;
+    }
+
+    /* technically not a modifiable property, just here to make it show as a bean property */
+    public void setAcknowledged(final boolean acknowledged) {
     }
 
     /**
