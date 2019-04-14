@@ -69,18 +69,32 @@ public class PushEdges implements Action {
         System.out.printf("Found %d topologies.\n", topologies.size());
         for (Map.Entry<OnmsTopologyProtocol, OnmsTopology> entry : topologies.entrySet()) {
             final OnmsTopologyProtocol protocol = entry.getKey();
+            final String protocolName = protocol.getId().toUpperCase();
             final OnmsTopology topology = entry.getValue();
 
             final Set<OnmsTopologyVertex> topologyVertices= topology.getVertices();
             final Set<OnmsTopologyEdge> topologyEdges = topology.getEdges();
             System.out.printf("%s: Pushing %d vertices and %d edges.\n",
-                    protocol.getId().toUpperCase(), topologyVertices.size(), topologyEdges.size());
+                    protocolName, topologyVertices.size(), topologyEdges.size());
 
+            int numVerticesPushed = 0;
             for (OnmsTopologyVertex vertex : topology.getVertices()) {
                 consumer.consume(OnmsTopologyMessage.update(vertex, protocol));
+                // Progress tracking
+                numVerticesPushed++;
+                if (numVerticesPushed > 0 && numVerticesPushed % 100 == 0) {
+                    System.out.printf("%s: Pushed %d vertices.\n", protocolName, numVerticesPushed);
+                }
             }
+
+            int numEdgesPushed = 0;
             for (OnmsTopologyEdge edge : topology.getEdges()) {
                 consumer.consume(OnmsTopologyMessage.update(edge, protocol));
+                // Progress tracking
+                numEdgesPushed++;
+                if (numEdgesPushed > 0 && numEdgesPushed % 100 == 0) {
+                    System.out.printf("%s: Pushed %d edges.\n", protocolName, numEdgesPushed);
+                }
             }
         }
         System.out.println("Done.");
