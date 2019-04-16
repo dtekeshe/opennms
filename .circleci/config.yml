@@ -140,6 +140,7 @@ jobs:
       - run:
           name: Build RPMs
           command: |
+            mvn -am -pl checkstyle install
             ./makerpm.sh -a -d
       - store_artifacts:
           path: ~/project/target/rpm/RPMS/noarch
