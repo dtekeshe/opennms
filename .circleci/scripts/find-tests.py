@@ -12,6 +12,8 @@ def does_module_have_any_tests(module_path):
 def should_skip_module_in(pom):
     if 'opennms-tools/' in pom:
         return True
+    if 'smoke-test-v2/' in pom:
+        return True
     if 'smoke-test/' in pom:
         return True
     if 'opennms-assemblies/' in pom:
